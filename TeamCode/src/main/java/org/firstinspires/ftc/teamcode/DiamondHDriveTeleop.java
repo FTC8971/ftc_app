@@ -55,7 +55,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @TeleOp(name="H-Drive: Teleop", group="H-Drive")
-@Disabled
+//@Disabled
 public class DiamondHDriveTeleop extends OpMode{
 
     /* Declare OpMode members. */
