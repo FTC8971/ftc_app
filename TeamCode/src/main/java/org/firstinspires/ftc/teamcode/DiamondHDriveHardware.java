@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -43,38 +44,31 @@ public class DiamondHDriveHardware
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        try{
-            leftMotor   = hwMap.dcMotor.get("left_drive");
-        }catch(Exception p_exception){
+        initializeMotor(leftMotor, "left_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
+        initializeMotor(rightMotor, "right_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
+        initializeMotor(centerMotor, "center_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, false);//initialize the left motor
+    }
 
+    public void setMotorPower(DcMotor motor, double power){
+        if (motor != null){
+            motor.setPower(power);
         }
-        try{
-            rightMotor  = hwMap.dcMotor.get("right_drive");
-        }catch(Exception p_exception){
+    }
 
+    public boolean initializeMotor(DcMotor motor, String hardwareMapName, double initialPower, DcMotor.RunMode runMode, boolean brakeWhenZero) {
+        try {
+            motor = hwMap.dcMotor.get(hardwareMapName);//get motor from hardware map
+            motor.setMode(runMode);//set the runmode
+            if (brakeWhenZero) {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//set the motor to brake when power is zero
+            } else {
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);//set the motor to rotate freely when power is zero
+            }
+            motor.setPower(initialPower);//set the motor power
+            return true;//return success
+        } catch (Exception exception) {//if something went wrong
+            return false;//return failure
         }
-        try{
-            centerMotor = hwMap.dcMotor.get("center_drive");
-        }catch(Exception p_exception){
-
-        }
-
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//set left and right motors to brake when not running
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//should keep the robot going in a straight line when the center motor is running
-
-        // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-        centerMotor.setPower(0);
-
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        centerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
 
     /***
