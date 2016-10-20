@@ -42,11 +42,10 @@ public class DiamondHDriveHardware
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-
         // Define and Initialize Motors
         initializeMotor(leftMotor, "left_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
         initializeMotor(rightMotor, "right_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
-        initializeMotor(centerMotor, "center_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, false);//initialize the left motor
+        initializeMotor(centerMotor, "center_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
     }
 
     public void setMotorPower(DcMotor motor, double power){
