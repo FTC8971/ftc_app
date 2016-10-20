@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.BeaconPushHardware;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -98,17 +99,22 @@ public class BeaconPush extends OpMode{
     @Override
     public void loop() {
         if (gamepad1.dpad_up){
-            setServoPosition(robot.leftServo, 1);//set servo to maximum position
-            setServoPosition(robot.leftServo, 1);//set servo to maximum position
+            BeaconPushHardware.setServoPosition(robot.leftServo, 1);//set servo to maximum position
+            BeaconPushHardware.setServoPosition(robot.leftServo, 1);//set servo to maximum position
         }
-        if (gamepad1.dpad_down){
-            setServoPosition(robot.leftServo, 0);//set servo to minimum position
-            setServoPosition(robot.leftServo, 0);//set servo to minimum position
+        else if (gamepad1.dpad_down){
+            BeaconPushHardware.setServoPosition(robot.leftServo, 0);//set servo to minimum position
+            BeaconPushHardware.setServoPosition(robot.leftServo, 0);//set servo to minimum position
+        }
+        else//if the dpad is at rest
+        {
+            BeaconPushHardware.setServoPosition(robot.leftServo, BeaconPushHardware.getServoPosition(robot.leftServo) + (gamepad1.left_stick_y / 4));//add the vertical position of the left joystick to the left servo position
+            BeaconPushHardware.setServoPosition(robot.rightServo, BeaconPushHardware.getServoPosition(robot.leftServo) + (gamepad1.right_stick_y / 4));//add the vertical position of the right joystick to the right servo position
         }
 
         telemetry.addData("Instructions", "Use the directional pad on gamepad one to control two servos");
-        telemetry.addData("left_servo position",  "%.2f", getServoPosition(robot.leftServo));//send servo position to driver
-        telemetry.addData("right_servo position", "%.2f", getServoPosition(robot.leftServo));//send servo position to driver
+        telemetry.addData("left_servo position",  "%.2f", BeaconPushHardware.getServoPosition(robot.leftServo));//send servo position to driver
+        telemetry.addData("right_servo position", "%.2f", BeaconPushHardware.getServoPosition(robot.leftServo));//send servo position to driver
         telemetry.addData("Robot Status", "Running");//send robot status to driver
         telemetry.update();
     }
@@ -122,17 +128,5 @@ public class BeaconPush extends OpMode{
         telemetry.update();
     }
 
-    public void setServoPosition(Servo servo, double position){
-        if (servo != null) {//if the servo exists
-            servo.setPosition(Range.clip(position, 0, 1));//set the position
-        }
-    }
-    public double getServoPosition(Servo servo){
-        if (servo != null) {//if the servo exists
-            return servo.getPosition();//get the position
-        }
-        else{//otherwise
-            return 0;//return 0
-        }
-    }
+
 }

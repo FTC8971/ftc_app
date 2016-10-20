@@ -48,7 +48,19 @@ public class BeaconPushHardware
             leftServo.setDirection(Servo.Direction.REVERSE);// Set one to move in reverse
         }catch(Exception p_exception){}
     }
-
+    public static void setServoPosition(Servo servo, double position){
+        if (servo != null) {//if the servo exists
+            servo.setPosition(Range.clip(position, 0, 1));//set the position
+        }
+    }
+    public static double getServoPosition(Servo servo){
+        if (servo != null) {//if the servo exists
+            return servo.getPosition();//get the position
+        }
+        else{//otherwise
+            return 0;//return 0
+        }
+    }
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
