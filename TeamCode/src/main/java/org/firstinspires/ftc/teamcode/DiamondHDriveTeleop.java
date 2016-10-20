@@ -123,17 +123,17 @@ public class DiamondHDriveTeleop extends OpMode{
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         if (gamepad1.left_stick_x==0 && gamepad1.left_stick_y == 0){//if the left joystick, used for H-Drive, is at rest,
-            robot.rightMotor.setPower(gamepad1.right_stick_x);//use the right joystick to...
-            robot.leftMotor.setPower(-gamepad1.right_stick_x);//make the robot do zero-turn
+            DiamondHDriveHardware.setMotorPower(robot.rightMotor, -gamepad1.right_stick_x);//use the right joystick to...
+            DiamondHDriveHardware.setMotorPower(robot.leftMotor, gamepad1.right_stick_x);//make the robot do zero-turn
             telemetry.addData("Robot Drive Mode", "Zero Turn");//tell the driver the robot is in zero-turn mode
             telemetry.addData("Gamepad 1 Right Stick X", gamepad1.right_stick_x);//send joystick position to driver
             telemetry.addData("Right Motor Power", robot.rightMotor.getPower());//send motor powers...
             telemetry.addData("Left Motor Power", robot.leftMotor.getPower());//to driver
         }
         else{//if the left joystick is not at rest
-            robot.leftMotor.setPower(gamepad1.left_stick_y);//left joystick vertical motion...
-            robot.rightMotor.setPower(gamepad1.left_stick_y);//controls robot forward/backward motion
-            robot.centerMotor.setPower(gamepad1.left_stick_x);//left joystick horizontal motion controls robot left/right motion
+            DiamondHDriveHardware.setMotorPower(robot.leftMotor, gamepad1.left_stick_y);//left joystick vertical motion...
+            DiamondHDriveHardware.setMotorPower(robot.rightMotor, gamepad1.left_stick_y);//controls robot forward/backward motion
+            DiamondHDriveHardware.setMotorPower(robot.centerMotor, gamepad1.left_stick_x);//left joystick horizontal motion controls robot left/right motion
             telemetry.addData("Robot Drive Mode", "H-Drive");//tell the driver the robot is in h-drive mode
             telemetry.addData("Gamepad 1 Left Stick X", gamepad1.left_stick_x);//send joystick position to driver
             telemetry.addData("Gamepad 1 Left Stick Y", gamepad1.left_stick_y);//send joystick position to driver
