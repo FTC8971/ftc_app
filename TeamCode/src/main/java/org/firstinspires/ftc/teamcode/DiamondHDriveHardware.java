@@ -48,9 +48,9 @@ public class DiamondHDriveHardware
         initializeMotor(centerMotor, "center_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
     }
 
-    public void setMotorPower(DcMotor motor, double power){
-        if (motor != null){
-            motor.setPower(power);
+    public static void setMotorPower(DcMotor motor, double power){//function to prevent errors when motors not found
+        if (motor != null){//if the motor was found
+            try{motor.setPower(power);}catch (Exception exception){}//set the motor power. catch errors just in case
         }
     }
 
