@@ -28,6 +28,7 @@ public class DiamondHDriveHardware
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  centerMotor = null;
+    public String errorMessage = "";
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -39,22 +40,27 @@ public class DiamondHDriveHardware
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public boolean init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
         // Define and Initialize Motors
-        initializeMotor(leftMotor, "left_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
-        initializeMotor(rightMotor, "right_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
-        initializeMotor(centerMotor, "center_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
+        leftMotor = initializeMotor("left_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
+        rightMotor = initializeMotor("right_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
+        centerMotor = initializeMotor("center_motor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//initialize the left motor
+        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        if (leftMotor == null || rightMotor == null || centerMotor == null){
+            return false;
+        }else{return true;}
     }
 
-    public static void setMotorPower(DcMotor motor, double power){//function to prevent errors when motors not found
+    public void setMotorPower(DcMotor motor, double power){//function to prevent errors when motors not found
         if (motor != null){//if the motor was found
             try{motor.setPower(power);}catch (Exception exception){}//set the motor power. catch errors just in case
         }
     }
 
-    public boolean initializeMotor(DcMotor motor, String hardwareMapName, double initialPower, DcMotor.RunMode runMode, boolean brakeWhenZero) {
+    public DcMotor initializeMotor(String hardwareMapName, double initialPower, DcMotor.RunMode runMode, boolean brakeWhenZero) {
+        DcMotor motor = null;
         try {
             motor = hwMap.dcMotor.get(hardwareMapName);//get motor from hardware map
             motor.setMode(runMode);//set the runmode
@@ -64,9 +70,10 @@ public class DiamondHDriveHardware
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);//set the motor to rotate freely when power is zero
             }
             motor.setPower(initialPower);//set the motor power
-            return true;//return success
+            return motor;//return success
         } catch (Exception exception) {//if something went wrong
-            return false;//return failure
+            errorMessage = exception.getMessage().concat(exception.getLocalizedMessage());
+            return motor;//return failure
         }
     }
 

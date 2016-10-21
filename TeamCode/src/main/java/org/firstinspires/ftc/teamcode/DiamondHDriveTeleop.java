@@ -71,7 +71,10 @@ public class DiamondHDriveTeleop extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        if (robot.init(hardwareMap)){
+            telemetry.addData("Robot Initialization", " succeeded");
+        }
+        telemetry.addData("Error Message: ", robot.errorMessage);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Robot Mode", "Initializing...");    //
@@ -102,8 +105,8 @@ public class DiamondHDriveTeleop extends OpMode{
      */
     @Override
     public void init_loop() {
-        telemetry.addData("Robot Mode", "Waiting...");//tell driver the robot is ready to go
-        updateTelemetry(telemetry);//sent telemetry data to driver
+        //telemetry.addData("Robot Mode", "Waiting...");//tell driver the robot is ready to go
+        //updateTelemetry(telemetry);//sent telemetry data to driver
     }
 
     /*
@@ -122,18 +125,23 @@ public class DiamondHDriveTeleop extends OpMode{
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        if (gamepad1.left_stick_x==0 && gamepad1.left_stick_y == 0){//if the left joystick, used for H-Drive, is at rest,
-            DiamondHDriveHardware.setMotorPower(robot.rightMotor, -gamepad1.right_stick_x);//use the right joystick to...
-            DiamondHDriveHardware.setMotorPower(robot.leftMotor, gamepad1.right_stick_x);//make the robot do zero-turn
+        if (gamepad1.atRest()) {
+            robot.setMotorPower(robot.leftMotor, 0);
+            robot.setMotorPower(robot.rightMotor, 0);
+            robot.setMotorPower(robot.centerMotor, 0);
+        }
+        else if (gamepad1.left_stick_x==0 && gamepad1.left_stick_y == 0){//if the left joystick, used for H-Drive, is at rest,
+            robot.setMotorPower(robot.rightMotor, -gamepad1.right_stick_x);//use the right joystick to...
+            robot.setMotorPower(robot.leftMotor, gamepad1.right_stick_x);//make the robot do zero-turn
             telemetry.addData("Robot Drive Mode", "Zero Turn");//tell the driver the robot is in zero-turn mode
             telemetry.addData("Gamepad 1 Right Stick X", gamepad1.right_stick_x);//send joystick position to driver
             telemetry.addData("Right Motor Power", robot.rightMotor.getPower());//send motor powers...
             telemetry.addData("Left Motor Power", robot.leftMotor.getPower());//to driver
         }
         else{//if the left joystick is not at rest
-            DiamondHDriveHardware.setMotorPower(robot.leftMotor, gamepad1.left_stick_y);//left joystick vertical motion...
-            DiamondHDriveHardware.setMotorPower(robot.rightMotor, gamepad1.left_stick_y);//controls robot forward/backward motion
-            DiamondHDriveHardware.setMotorPower(robot.centerMotor, gamepad1.left_stick_x);//left joystick horizontal motion controls robot left/right motion
+            robot.setMotorPower(robot.leftMotor, gamepad1.left_stick_y);//left joystick vertical motion...
+            robot.setMotorPower(robot.rightMotor, gamepad1.left_stick_y);//controls robot forward/backward motion
+            robot.setMotorPower(robot.centerMotor, gamepad1.left_stick_x);//left joystick horizontal motion controls robot left/right motion
             telemetry.addData("Robot Drive Mode", "H-Drive");//tell the driver the robot is in h-drive mode
             telemetry.addData("Gamepad 1 Left Stick X", gamepad1.left_stick_x);//send joystick position to driver
             telemetry.addData("Gamepad 1 Left Stick Y", gamepad1.left_stick_y);//send joystick position to driver
