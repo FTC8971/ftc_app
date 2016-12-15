@@ -37,8 +37,8 @@ class DiamondBladeAutonomous extends OpMode
         leftMotor = initializeMotor("leftMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
         rightMotor = initializeMotor("rightMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
         //shootMotor = initializeMotor("shootMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
-        leftServo = (Servo) hardwareMap.get("leftServo");
-        rightServo = (Servo) hardwareMap.get("rightServo");
+        leftServo = initializeServo("leftServo", INIT_LEFT_SERVO_POS);
+        rightServo = initializeServo("rightServo", INIT_RIGHT_SERVO_POS);
         cageMotor = initializeMotor("cageMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
         //liftMotor = initializeMotor("liftMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
         //scoopMotor = initializeMotor("scoopMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
@@ -51,12 +51,38 @@ class DiamondBladeAutonomous extends OpMode
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         //shootMotor.setPower(0);
+        /*****obsolete; included in the new "initializeServo" function
         leftServo.setPosition(INIT_LEFT_SERVO_POS);
         rightServo.setPosition(INIT_RIGHT_SERVO_POS);
+        */
         cageMotor.setPower(0);
         //liftMotor.setPower(0);
         //scoopMotor.setPower(0);
 
+    }
+
+    public Servo initializeServo(String hardwareMapName){
+        Servo servo = null;
+        try {
+            servo = hardwareMap.servo.get("hardwareMapName");
+        }
+        catch(Exception exception){
+            telemetry.addData("Could not initialize servo: ", exception.getMessage());
+            telemetry.addData("Servo not initialized: ", hardwareMapName);
+        }
+        return servo;
+    }
+    public Servo initializeServo(String hardwareMapName, double InitialPosition){
+        Servo servo = null;
+        try {
+            servo = hardwareMap.servo.get("hardwareMapName");
+            servo.setPosition(InitialPosition);
+        }
+        catch(Exception exception){
+            telemetry.addData("Could not initialize servo: ", exception.getMessage());
+            telemetry.addData("Servo not initialized: ", hardwareMapName);
+        }
+        return servo;
     }
     public DcMotor initializeMotor(String hardwareMapName, double initialPower, DcMotor.RunMode runMode, boolean brakeWhenZero) {
         DcMotor motor = null;

@@ -55,8 +55,8 @@ public class DiamondBladeOpMode extends OpMode
             rightMotor = initializeMotor("rightMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
             drawBackMotor = initializeMotor("drawBackMotor", 0, DcMotor.RunMode.RUN_USING_ENCODER, true);
             shootMotor = initializeMotor("shootMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
-            leftServo = (Servo) hardwareMap.get("leftServo");
-            rightServo = (Servo) hardwareMap.get("rightServo");
+            leftServo = initializeServo("leftServo", INIT_LEFT_SERVO_POS);
+            rightServo = initializeServo("rightServo", INIT_RIGHT_SERVO_POS);
             cageMotor = initializeMotor("cageMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
         }
         catch(Exception exception){
@@ -82,24 +82,22 @@ public class DiamondBladeOpMode extends OpMode
         /*********************************<<<<END>>>>***********************************/
 
         //telemetry.update();
-        /*
-        try {
+
+            /*****unnecessary. the "initializeMotor" function has always included an input for motor power.******
             hDrive.setPower(0);
             leftMotor.setPower(0);
             rightMotor.setPower(0);
             drawBackMotor.setPower(0);
             shootMotor.setPower(0);
-            leftServo.setPosition(INIT_LEFT_SERVO_POS);
-            rightServo.setPosition(INIT_RIGHT_SERVO_POS);
             cageMotor.setPower(0);
-            //liftMotor.setPower(0);
-            //scoopMotor.setPower(0);
-        }
-        catch(Exception exception){
-            telemetry.addData("Error: ", "Error initializing setting motor/servo position");
-            telemetry.addData("Exception Info: ", exception.getMessage());
-            telemetry.update();
-        }*/
+            liftMotor.setPower(0);
+            scoopMotor.setPower(0);
+            */
+            /*****obsolete; included in the new "initializeServo" function******
+             leftServo.setPosition(INIT_LEFT_SERVO_POS);
+             rightServo.setPosition(INIT_RIGHT_SERVO_POS);
+             */
+        
     }
 
     /*********************************<<<<START>>>>***********************************/
@@ -119,6 +117,35 @@ public class DiamondBladeOpMode extends OpMode
     }
     /*********************************<<<<END>>>>***********************************/
 
+    public Servo initializeServo(String hardwareMapName){
+        Servo servo = null;
+        try {
+            servo = hardwareMap.servo.get("hardwareMapName");
+            telemetry.addData("Servo initialized: ", hardwareMapName);
+            updateTelemetry(telemetry);
+        }
+        catch(Exception exception){
+            telemetry.addData("Could not initialize servo: ", exception.getMessage());
+            telemetry.addData("Servo not initialized: ", hardwareMapName);
+            updateTelemetry(telemetry);
+        }
+        return servo;
+    }
+    public Servo initializeServo(String hardwareMapName, double InitialPosition){
+        Servo servo = null;
+        try {
+            servo = hardwareMap.servo.get("hardwareMapName");
+            servo.setPosition(InitialPosition);
+            telemetry.addData("Servo initialized: ", hardwareMapName);
+            updateTelemetry(telemetry);
+        }
+        catch(Exception exception){
+            telemetry.addData("Could not initialize servo: ", exception.getMessage());
+            telemetry.addData("Servo not initialized: ", hardwareMapName);
+            updateTelemetry(telemetry);
+        }
+        return servo;
+    }
     public DcMotor initializeMotor(String hardwareMapName, double initialPower, DcMotor.RunMode runMode, boolean brakeWhenZero) {
         DcMotor motor = null;
         try {
