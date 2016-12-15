@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
 /**
  * This is NOT an opmode.
  *
@@ -28,14 +29,20 @@ public class DiamondHDriveHardware
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  centerMotor = null;
-    public String errorMessage = "";
+    public DcMotor  shootMotor = null;
+    public DcMotor  sweeperMotor = null;
+  /*  public Servo    leftHand;
+    public Servo    rightHand; */
+    public String errorMessage;
+
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public DiamondHDriveHardware(){
+    public DiamondHDriveHardware()
+    {
 
     }
 

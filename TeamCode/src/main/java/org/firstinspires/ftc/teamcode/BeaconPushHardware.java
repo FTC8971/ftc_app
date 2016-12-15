@@ -86,4 +86,3 @@ public class BeaconPushHardware
         period.reset();
     }
 }
-
