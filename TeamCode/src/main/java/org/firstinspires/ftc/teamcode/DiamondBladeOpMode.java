@@ -55,8 +55,8 @@ public class DiamondBladeOpMode extends OpMode
             rightMotor = initializeMotor("rightMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
             drawBackMotor = initializeMotor("drawBackMotor", 0, DcMotor.RunMode.RUN_USING_ENCODER, true);
             shootMotor = initializeMotor("shootMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
-            leftServo = initializeServo("leftServo", INIT_LEFT_SERVO_POS);
-            rightServo = initializeServo("rightServo", INIT_RIGHT_SERVO_POS);
+            leftServo = (Servo) hardwareMap.get("leftServo");//initializeServo("leftServo", INIT_LEFT_SERVO_POS);
+            rightServo = (Servo) hardwareMap.get("rightServo");//initializeServo("rightServo", INIT_RIGHT_SERVO_POS);
             cageMotor = initializeMotor("cageMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
         }
         catch(Exception exception){
@@ -93,10 +93,10 @@ public class DiamondBladeOpMode extends OpMode
             liftMotor.setPower(0);
             scoopMotor.setPower(0);
             */
-            /*****obsolete; included in the new "initializeServo" function******
+            //*****obsolete; included in the new "initializeServo" function******
              leftServo.setPosition(INIT_LEFT_SERVO_POS);
              rightServo.setPosition(INIT_RIGHT_SERVO_POS);
-             */
+
         
     }
 
@@ -224,11 +224,23 @@ public class DiamondBladeOpMode extends OpMode
 
         if(gamepad1.a)
         {
-           drawbackMethod();
+            PullLauncherDown();
         }
-        if(gamepad1.b)
+        else if(gamepad1.b)
         {
-            shootTheBall();
+            drawBackMotor.setPower(-.5);
+        }
+        else{
+            drawBackMotor.setPower(0);
+        }
+        if(gamepad1.x){
+           shootMotor.setPower(.25);
+        }
+        else if(gamepad1.y){
+            shootMotor.setPower(-.25);
+        }
+        else{
+            shootMotor.setPower(0);
         }
 
         telemetry.addData("left encoder", String.valueOf(leftMotor.getCurrentPosition())); //encoder values
@@ -269,7 +281,21 @@ public class DiamondBladeOpMode extends OpMode
         formattedAlpha = formattedAlpha.concat(String.valueOf(alpha));
         return preamble.concat(formattedRed).concat(formattedGreen).concat(formattedBlue).concat(formattedAlpha);
     }
+    public boolean PullLauncherDown(){
+        //*************************run motor for certain distance***************************
+        double goal = 3000; // or whatever you determine by testing
+        double initialposition = drawBackMotor.getCurrentPosition();
+        drawBackMotor.setPower(1);//or -1 if it needs to turn the other direction
+        while(drawBackMotor.getCurrentPosition() < goal+initialposition){//might have to be > if the motor turns the other direction
+            telemetry.addData("Encoder Value: ", drawBackMotor.getCurrentPosition());
+            updateTelemetry(telemetry);
+        }
+        drawBackMotor.setPower(0);
+        return true;
+        //**************************end*****************************************************
 
+    }
+    /*
     public void drawbackMethod()
     {
         isDrawing = true;
@@ -278,13 +304,17 @@ public class DiamondBladeOpMode extends OpMode
         shootMotor.setTargetPosition(shootMotor.getCurrentPosition()+100);
         drawBackMotor.setTargetPosition(start);
         isDrawing = false;
+        telemetry.addData("Method Called:", "drawBackMethod");
+        updateTelemetry(telemetry);
     }
     public void shootTheBall()
     {
         if (!isDrawing){
             shootMotor.setTargetPosition(shootMotor.getCurrentPosition()-100);
         }
-    }
+        telemetry.addData("Method Called:", "shootTheBall");
+        updateTelemetry(telemetry);
+    }*/
     /*********************************<<<<END>>>>***********************************/
 
 
