@@ -16,8 +16,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 /**
  * Created by LCSTEAM3 on 12/10/2016.
  */
+<<<<<<< HEAD
 @TeleOp(name = "DiamondBladeOpMode", group = "OpMode")
 public class DiamondBladeOpMode extends OpMode {
+=======
+@TeleOp(name="DiamondBladeOpMode", group="OpMode")
+public class DiamondBladeOpMode extends OpMode
+{
+    //***********initialize motor variables
+>>>>>>> origin/master
     DcMotor hDrive;
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -52,20 +59,34 @@ public class DiamondBladeOpMode extends OpMode {
      * <<<<>>>>
      ***********************************/
 
+<<<<<<< HEAD
     final double INIT_LEFT_SERVO_POS = 0;
     final double INIT_RIGHT_SERVO_POS = 1;
     final double INIT_SHOOT_SERVO_POS = 0.3;
+=======
+    boolean isWinding = false; //used to keep the shooter from launching before the cord is unwound
+    final double INIT_LEFT_SERVO_POS = 1;//initial servo positions for the
+    final double INIT_RIGHT_SERVO_POS = 0;//beacon triggers
+>>>>>>> origin/master
     boolean isDrawing = false;
     int sGoal = 0;
 
     @Override
+<<<<<<< HEAD
     public void init() {
         telemetry.addData("software version:", 3);
         try {
+=======
+    public void init()//runs once when 'init' button is pressed
+    {
+        try {//error catching
+            //**************initialize all the motors, using function further down in the code.*******************
+>>>>>>> origin/master
             hDrive = initializeMotor("hDrive", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);//(DcMotor) hardwareMap.get("hDrive");
             leftMotor = initializeMotor("leftMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
             rightMotor = initializeMotor("rightMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
             shootMotor = initializeMotor("shootMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
+<<<<<<< HEAD
             leftServo = (Servo) hardwareMap.get("leftServo"); //initializeServo("leftServo", INIT_LEFT_SERVO_POS);
             rightServo = (Servo) hardwareMap.get("rightServo");//initializeServo("rightServo", INIT_RIGHT_SERVO_POS);
             shootServo = (Servo) hardwareMap.get("shootServo");//initializeServo("shootServo",INIT_SHOOT_SERVO_POS);
@@ -73,11 +94,21 @@ public class DiamondBladeOpMode extends OpMode {
         } catch (Exception exception) {
             telemetry.addData("Error: ", "Error initializing one or more motors/servos");
             telemetry.addData("Exception Info: ", exception.getMessage());
+=======
+            cageMotor = initializeMotor("cageMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
+            leftServo = (Servo) hardwareMap.get("leftServo");//initializeServo("leftServo", INIT_LEFT_SERVO_POS);
+            rightServo = (Servo) hardwareMap.get("rightServo");//initializeServo("rightServo", INIT_RIGHT_SERVO_POS);
+            //liftMotor = initializeMotor("liftMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
+            //scoopMotor = initializeMotor("scoopMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
+        }
+        catch(Exception exception){
+            telemetry.addData("Error: ", "Error initializing one or more motors/servos");//tell the driver something went wrong
+            telemetry.addData("Exception Info: ", exception.getMessage());//if this happens, CHECK THE NAMES IN THE HARDWARE MAP FIRST!
+>>>>>>> origin/master
             telemetry.update();
         }
 
-        //liftMotor = initializeMotor("liftMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
-        //scoopMotor = initializeMotor("scoopMotor", 0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, true);
+
 
         /*********************************<<<<START>>>>***********************************/
         /* Second, we'll want to get the color sensor object from the hardware map.
@@ -167,27 +198,32 @@ public class DiamondBladeOpMode extends OpMode {
         }
         return servo;
     }
+<<<<<<< HEAD
 
+=======
+    //*******************function to initialize motors***************************
+>>>>>>> origin/master
     public DcMotor initializeMotor(String hardwareMapName, double initialPower, DcMotor.RunMode runMode, boolean brakeWhenZero) {
-        DcMotor motor = null;
-        try {
+        DcMotor motor = null;//initialize the motor variable
+        try {//error catching so the code doesn't crash if the motor isn't found
             motor = hardwareMap.dcMotor.get(hardwareMapName);//get motor from hardware map
             motor.setMode(runMode);//set the runmode
-            if (brakeWhenZero) {
+            if (brakeWhenZero) {//based on the input to the function...
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//set the motor to brake when power is zero
             } else {
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);//set the motor to rotate freely when power is zero
             }
             motor.setPower(initialPower);//set the motor power
-            telemetry.addData("Success:", hardwareMapName.concat(" found!"));
+            telemetry.addData("Success:", hardwareMapName.concat(" found!"));//tell the driver the motor was initialized successfully
             return motor;//return success
         } catch (Exception exception) {//if something went wrong
-            telemetry.addData("Error: ", exception.getMessage().concat(exception.getLocalizedMessage()));
+            telemetry.addData("Error: ", exception.getMessage().concat(exception.getLocalizedMessage()));//tell the driver what happened
             return motor;//return failure
         }
     }
 
     @Override
+<<<<<<< HEAD
     public void loop() {
 
 //        double x = gamepad1.left_stick_x; //drive function
@@ -216,6 +252,26 @@ public class DiamondBladeOpMode extends OpMode {
         leftServo.setPosition(gamepad1.left_trigger);
         rightServo.setPosition(1 - gamepad1.right_trigger);
 
+=======
+    public void loop()//this loops continuously while the code is running
+    {
+        //***************drive function******************
+        double x = gamepad1.left_stick_x;
+        double y = gamepad1.left_stick_y;
+        leftMotor.setPower(y * ((x + 1) / 2));//some code to use tank drive with
+        rightMotor.setPower(y * ((x - 1) / 2));//one joystick
+
+        hDrive.setPower(gamepad1.right_stick_x);//while using the other joystick to control the H-Drive
+        //**************servo trigger controls***************
+        if(gamepad1.right_bumper) //if true
+        {
+            rightServo.setPosition(.3);
+        }
+        if(!gamepad1.right_bumper) // if false
+        {
+            rightServo.setPosition(-0.05);
+        }
+>>>>>>> origin/master
 
         if (gamepad2.right_bumper && cageState == cageStates.inactive) {
             cageState = cageStates.active;
@@ -225,6 +281,7 @@ public class DiamondBladeOpMode extends OpMode {
             cageState = cageStates.inactive;
         }
 
+<<<<<<< HEAD
 
         if (cageState == cageStates.active) {
             cagePosition = cageMotor.getCurrentPosition();
@@ -240,6 +297,12 @@ public class DiamondBladeOpMode extends OpMode {
             if (cagePosition > goal + 15) {
                 cageMotor.setPower(-.2);
             }
+=======
+        //*******************control the cage motor (lift) with the triggers on gamepad 2************
+        if(gamepad2.left_trigger > 0) //cage motor code
+        {
+            cageMotor.setPower(gamepad2.left_trigger);
+>>>>>>> origin/master
         }
 
         if (cageState == cageStates.inactive) {
@@ -305,6 +368,7 @@ public class DiamondBladeOpMode extends OpMode {
         green = colorSensor1.green();
         blue = colorSensor1.blue();
         /*********************************<<<<END>>>>***********************************/
+<<<<<<< HEAD
 
 //        if(gamepad2.a)
 //        {
@@ -329,6 +393,30 @@ public class DiamondBladeOpMode extends OpMode {
 //            shootMotor.setPower(0);
 //        }
 
+=======
+        //*************control the shooter with the number buttons on the driver's gamepad************
+        if(gamepad1.a)
+        {
+            PullLauncherDown();//draws launcher back, locks in place, unwinds. function below.
+        }
+        else if(gamepad1.b)
+        {
+            shootLauncher();//unlocks the launcher, causing it to shoot. function below.
+        }
+        else{
+            drawBackMotor.setPower(0);//if neither of the buttons is pressed the motor should be off.
+        }
+        if(gamepad1.x){
+           shootMotor.setPower(.25);
+        }
+        else if(gamepad1.y){
+            shootMotor.setPower(-.25);
+        }
+        else{
+            shootMotor.setPower(0);
+        }
+        //******************add encoder data to telemetry************************************
+>>>>>>> origin/master
         telemetry.addData("left encoder", String.valueOf(leftMotor.getCurrentPosition())); //encoder values
         telemetry.addData("right encoder", String.valueOf(rightMotor.getCurrentPosition()));
         telemetry.addData("hdrive encoder", String.valueOf(hDrive.getCurrentPosition()));
@@ -369,6 +457,7 @@ public class DiamondBladeOpMode extends OpMode {
         formattedAlpha = formattedAlpha.concat(String.valueOf(alpha));
         return preamble.concat(formattedRed).concat(formattedGreen).concat(formattedBlue).concat(formattedAlpha);
     }
+<<<<<<< HEAD
 //    public boolean PullLauncherDown() {
 //        //*************************run motor for certain distance***************************
 //        double goal = -5000; // or whatever you determine by testing
@@ -404,6 +493,85 @@ public class DiamondBladeOpMode extends OpMode {
 
 
     //**************************end*****************************************************
+=======
+    //*****************function to pull back launcher******************
+    public void PullLauncherDown(){
+        isWinding = true;//when this is true the shoot button is disabled
+        //*************************run drawBackMotor to pull back launcher***************************
+        double goal = 3000; // or whatever you determine by testing
+        double initialposition = drawBackMotor.getCurrentPosition();//so we don't have to wait to reset the encoder
+        drawBackMotor.setPower(1);//turn the motor on
+        while(drawBackMotor.getCurrentPosition() < goal+initialposition){//run the motor until the position reaches the goal
+            telemetry.addData("Encoder Value: ", drawBackMotor.getCurrentPosition());//add telemetry data for the encoder value
+            updateTelemetry(telemetry);//and push it to the driver station
+        }
+        //while the drawBackMotor is still running...
+        //*************************run shootMotor to lock in place***************************
+        goal = 30; // this is just a guess, as is the direction of the motor
+        initialposition = shootMotor.getCurrentPosition();//so we don't have to wait to reset the encoder
+        shootMotor.setPower(1);//turn on the motor
+        while(shootMotor.getCurrentPosition() < goal+initialposition){//run the motor until it reaches the goal
+            telemetry.addData("Encoder Value: ", shootMotor.getCurrentPosition());//and send the encoder value
+            updateTelemetry(telemetry);//                                           to the driver station
+        }
+        shootMotor.setPower(0);//turn off the motor
+        //*************************run drawBackMotor the other way to unwind the cord***************************
+        goal = -3000; // or whatever you determine by testing
+        initialposition = drawBackMotor.getCurrentPosition();//so we don't have to reset the encoders
+        drawBackMotor.setPower(-1);//turn on the motor in reverse
+        while(drawBackMotor.getCurrentPosition() > goal+initialposition){//run till it reaches the goal (note the > symbol, since the motor is turning the other way)
+            telemetry.addData("Encoder Value: ", drawBackMotor.getCurrentPosition());//send data
+            updateTelemetry(telemetry);//                                              to the driver
+        }
+        drawBackMotor.setPower(0);//turn off the motor
+        isWinding = false;//reenable the shoot button
+        //**************************end*****************************************************
+
+    }
+    //******************function to shoot launcher*******************
+    public void shootLauncher(){
+        //*************************run shootMotor to release***************************
+        if (!isWinding){//as long as the PullLauncherDown function isn't still running
+            double goal = -30; // or whatever you determine by testing
+            double initialposition = shootMotor.getCurrentPosition();
+            shootMotor.setPower(-1);//or -1 if it needs to turn the other direction
+            while(shootMotor.getCurrentPosition() > goal+initialposition){//might have to be > if the motor turns the other direction
+                telemetry.addData("Encoder Value: ", shootMotor.getCurrentPosition());
+                updateTelemetry(telemetry);
+            }
+            shootMotor.setPower(0);
+        }else{//otherwise
+            telemetry.addData("Conflict: ", "Launcher still preparing for shot");//tell the driver he can't do that right now
+            updateTelemetry(telemetry);
+        }
+
+    }
+    //*************************run motor for certain distance***************************
+    public boolean moveMotorDistance(DcMotor Motor, double encoderDistance, boolean isDirectionForward){
+        double initialposition = Motor.getCurrentPosition();
+        if (isDirectionForward){
+            Motor.setPower(1);
+            while(Motor.getCurrentPosition() < encoderDistance+initialposition){//might have to be > if the motor turns the other direction
+                telemetry.addData("Encoder Value: ", Motor.getCurrentPosition());
+                updateTelemetry(telemetry);
+            }
+
+            drawBackMotor.setPower(0);
+            return true;
+        }
+        else {
+            Motor.setPower(-1);
+            while (Motor.getCurrentPosition() > encoderDistance + initialposition) {
+                telemetry.addData("Encoder Value: ", Motor.getCurrentPosition());
+                updateTelemetry(telemetry);
+            }
+            drawBackMotor.setPower(0);
+            return true;
+        }
+
+
+    }
+>>>>>>> origin/master
     /*
     /*********************************<<<<END>>>>***********************************/
 
